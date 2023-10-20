@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Slowdown",
+  "description": "Add deliberate pauses to sites that distract you",
+  "version": "0.0.1",
+  "options_page": "src/settings.html",
+  "action": {
+    "default_title": "Slowdown",
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "permissions": [],
+  "optional_permissions": ["scripting"],
+  "host_permissions": ["*://*/*"]
+}
