@@ -13,6 +13,6 @@
     "type": "module"
   },
   "permissions": [],
-  "optional_permissions": ["scripting"],
-  "host_permissions": ["*://*/*"]
+  "optional_permissions": ["activeTab", "scripting"],
+  "optional_host_permissions": ["*://*/*"]
 }
