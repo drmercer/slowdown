@@ -34,7 +34,8 @@ export async function registerContentScriptsForOrigin(origin) {
       id,
       matches: [originPermission(origin)],
       js: ["src/content.js"],
-      runAt: "document_start",
+      runAt: "document_start", // gives us the most flexibility - we can use DOMContentLoaded to defer stuff if needed
+      world: "MAIN", // in order to monkeypatch browser APIs to listen for navigations
       persistAcrossSessions: true,
     },
   ]);

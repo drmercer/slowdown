@@ -27,9 +27,11 @@ To install in Chrome:
 
 - [x] bare minimum functionality
 - [x] can click "cancel" to go back
-- [ ] don't display loading dialog immediately after clicking "cancel"
+- [x] Verify it works in SPAs
+- [x] disable "cancel" button before new page loads
+- [x] don't display loading dialog immediately after clicking "cancel"
 - [ ] add button to remove from a site
-- [ ] variable loading time
+- [ ] random variation in loading time
 - [ ] styling
 - [ ] icons
 - [ ] display your current [Trickle](https://trickle.danmercer.net/) task in an iframe
