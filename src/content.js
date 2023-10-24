@@ -18,10 +18,22 @@ function init() {
       backdrop-filter: blur(20px);
       background: rgba(15, 72, 87, 0.05);
     }
+    .slowdown_dialog {
+      width: 600px;
+      max-width: 80vw;
+      height: 300px;
+      max-height: 80vh;
+      font-family: sans-serif;
+      font-size: 1rem;
+      color: #000;
+      background: #fff8;
+      border: none;
+      border-radius: 1rem;
+    }
   </style>
   <dialog class="slowdown_dialog">
-    <p>Loading...</p>
-    <button>Cancel</button>
+    <h1>Loading...</h1>
+    <button>Go back</button>
   </dialog>
   `
   document.body.appendChild(root);
