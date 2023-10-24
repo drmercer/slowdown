@@ -2,13 +2,17 @@ function originPermission(origin) {
   return new URL(origin).origin + "/*";
 }
 
+function permissionsForOrigin(origin) {
+  return {
+    permissions: ["scripting"],
+    origins: [originPermission(origin)],
+  };
+}
+
 export async function requestPermissionForOrigin(origin) {
   try {
     await chrome.permissions.request(
-      {
-        permissions: ["scripting"],
-        origins: [originPermission(origin)],
-      },
+      permissionsForOrigin(origin),
     );
     return true;
   } catch (err) {
@@ -21,7 +25,7 @@ export async function requestPermissionForOrigin(origin) {
 }
 
 export async function registerContentScriptsForOrigin(origin) {
-  const id = "notificationintercept_" + encodeURIComponent(new URL(origin).origin);
+  const id = scriptIdForOrigin(origin);
   try {
     await chrome.scripting.unregisterContentScripts({
       ids: [id]
@@ -39,4 +43,39 @@ export async function registerContentScriptsForOrigin(origin) {
       persistAcrossSessions: true,
     },
   ]);
+}
+
+function scriptIdForOrigin(origin) {
+  return "notificationintercept_" + encodeURIComponent(new URL(origin).origin);
+}
+
+export async function removeFromOrigin(origin) {
+  const id = scriptIdForOrigin(origin);
+  try {
+    await chrome.scripting.unregisterContentScripts({
+      ids: [id]
+    });
+  } catch (err) {
+    console.warn('Failed to unregister content scripts', err);
+  }
+  try {
+    await chrome.permissions.remove(
+      permissionsForOrigin(origin),
+    );
+  } catch (err) {
+    console.warn('Failed to self-revoke permissions', err);
+  }
+}
+
+export async function isRegisteredForOrigin(origin) {
+  const id = scriptIdForOrigin(origin);
+  try {
+    const scripts = await chrome.scripting.getRegisteredContentScripts({
+      ids: [id]
+    });
+    return scripts.length > 0;
+  } catch (err) {
+    console.warn(`Failed to check if script is registered for '${origin}'`, err);
+    return false;
+  }
 }
