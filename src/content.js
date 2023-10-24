@@ -21,8 +21,8 @@ function init() {
     .slowdown_dialog {
       width: 600px;
       max-width: 80vw;
-      height: 300px;
       max-height: 80vh;
+      overflow-y: auto;
       font-family: sans-serif;
       font-size: 1rem;
       color: #000;
@@ -30,10 +30,20 @@ function init() {
       border: none;
       border-radius: 1rem;
     }
+    .slowdown_dialog button {
+      font-size: 1rem;
+      border: 2px solid currentcolor;
+      padding: 5px;
+      border-radius: 5px;
+      margin: 5px 0;
+      background: none;
+    }
   </style>
   <dialog class="slowdown_dialog">
     <h1>Loading...</h1>
-    <button>Go back</button>
+    <div>
+      <button>Go back</button>
+    </div>
   </dialog>
   `
   document.body.appendChild(root);
