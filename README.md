@@ -30,8 +30,9 @@ To install in Chrome:
 - [x] Verify it works in SPAs
 - [x] disable "cancel" button before new page loads
 - [x] don't display loading dialog immediately after clicking "cancel"
-- [ ] add button to remove from a site
-- [ ] random variation in loading time
+- [x] add button to remove from a site
 - [ ] styling
-- [ ] icons
 - [ ] display your current [Trickle](https://trickle.danmercer.net/) task in an iframe
+- [ ] make it compatible with strict CSPs (don't use `innerHTML` or injected `<style>` tag)
+- [ ] random variation in loading time
+- [ ] icons
