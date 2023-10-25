@@ -60,6 +60,8 @@ function init() {
   // The core logic
 
   let timeout = null;
+  // this is a clever hack to avoid marking Slack channels read until after the Loading dialog
+  let wentBack = false;
 
   function showLoading(why = 'unknown', allowCancel = true) {
     // Only show it if the user didn't recently click "Cancel"
@@ -68,9 +70,19 @@ function init() {
       console.log(`[Slowdown] suppressed because canceled recently (${why})`);
       return;
     }
+    if (dialog.open) {
+      console.log(`[Slowdown] suppressed because dialog is open (${why})`);
+      return;
+    }
     console.log(`[Slowdown] showing loading modal (${why})`);
     try {
       dialog.showModal();
+      // we do this to "defer" the actual navigation, to hopefully prevent e.g. Slack from marking channels as read right away
+      if (why === 'pushstate') {
+        wentBack = true;
+        window.history.back();
+        console.log(`[Slowdown] temporarily going back (${why})`);
+      }
     } catch (e) {
       console.warn(`[Slowdown] failed to show modal`, e);
     }
@@ -78,14 +90,29 @@ function init() {
     if (timeout) {
       clearTimeout(timeout);
     }
+    const loadingTimeMs = 4000;
     timeout = setTimeout(() => {
-      dialog.close();
-    }, 4000);
+      // if we're undoing a temporary back, wait a bit so that the dialog doesn't re-open right away
+      const closeDelay = wentBack ? 200 : 0;
+      if (wentBack) {
+        window.history.forward();
+        wentBack = false;
+        console.log(`[Slowdown] undoing temporary back`);
+      }
+      timeout = setTimeout(() => {
+        console.log(`[Slowdown] closing modal`);
+        dialog.close();
+      }, closeDelay);
+    }, loadingTimeMs);
   }
 
   cancel.onclick = () => {
     window.localStorage.setItem(LocalStorageKeys.CancelAt, Date.now());
-    window.history.back();
+    if (wentBack) {
+      console.log(`[Slowdown] not going back because we already (temporarily) went back`);
+    } else {
+      window.history.back();
+    }
     if (timeout) {
       clearTimeout(timeout);
     }
@@ -97,7 +124,7 @@ function init() {
   window.onbeforeunload = () => showLoading('beforeunload', false);
   window.onhashchange = () => showLoading('onhashchange');
   window.onpopstate = () => showLoading('onpopstate');
-  window.addEventListener('slowdown_pushstate', () => showLoading('locationchange'));
+  window.addEventListener('slowdown_pushstate', () => showLoading('pushstate'));
 
   // Let's go!
 

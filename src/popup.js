@@ -27,7 +27,7 @@ removeButton.onclick = async () => {
 async function init() {
   currentSite = await getCurrentSite();
   const isCurrentSiteRegistered = await isRegisteredForOrigin(currentSite);
-  addButton.style.display = isCurrentSiteRegistered ? 'none' : '';
+  addButton.innerText = isCurrentSiteRegistered ? 'Re-add site' : 'Add site';
   removeButton.style.display = isCurrentSiteRegistered ? '' : 'none';
 }
 init();
